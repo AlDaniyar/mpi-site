@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модуль 2: Хабар алмасу - MPI LAB</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+    <style>
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 0.5rem 0;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .communication-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .comm-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .comm-card.warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .comm-card.success {
+            border-left-color: var(--success-color);
+        }
+        
+        .latency-comparison {
+            margin: 3rem 0;
+        }
+        
+        .benchmark-results {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .benchmark-bar {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        
+        .benchmark-label {
+            width: 200px;
+            font-weight: 500;
+        }
+        
+        .benchmark-value {
+            flex: 1;
+            height: 30px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">MPI<span>LAB</span></a>
+            <div class="nav-links">
+                <a href="../index.html"><i class="fas fa-home"></i> Басты</a>
+                <a href="../about.html"><i class="fas fa-info-circle"></i> Жоба туралы</a>
+                <a href="../basics.html"><i class="fas fa-book"></i> MPI негіздері</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle active"><i class="fas fa-cubes"></i> Модульдер <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="module1.html"><i class="fas fa-microchip"></i> Модуль 1</a>
+                        <a href="module2.html" class="active"><i class="fas fa-exchange-alt"></i> Модуль 2</a>
+                        <a href="module3.html"><i class="fas fa-users"></i> Модуль 3</a>
+                    </div>
+                </div>
+                <a href="../cloud.html"><i class="fas fa-cloud"></i> Бұлттық технологиялар</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="module-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Модуль 2: Процессер арасында хабар алмасу</h1>
+                <p class="subtitle">MPI_Send, MPI_Recv және MPI_Bsend функцияларымен жұмыс істеу</p>
+                <p class="description">
+                    Бұл модульде процессер арасында хабар алмасуды, блоктық және буферленген 
+                    функцияларды қолдануды үйренедіз. MPI желілік коммуникацияларының негіздерін түсінесіз.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="module-content">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="../index.html">Басты</a> / 
+                <a href="../basics.html">MPI негіздері</a> / 
+                <span>Модуль 2: Хабар алмасу</span>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="section-title">MPI Хабарламалардың Өнімділік Метрикалары</div>
+            
+            <div class="performance-metrics">
+                <div class="metric-card">
+                    <div class="metric-value">0.7 μs</div>
+                    <div class="metric-label">Кідіріс (InfiniBand)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">12.5 GB/s</div>
+                    <div class="metric-label">Өткізу қабілеті</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">99.9%</div>
+                    <div class="metric-label">Сенімділік</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">1M+</div>
+                    <div class="metric-label">Бір мезгілдегі хабарлама</div>
+                </div>
+            </div>
+
+            <!-- Communication Types -->
+            <div class="section-title">MPI Хабарлама Түрлері</div>
+            
+            <div class="communication-types">
+                <div class="comm-card">
+                    <h3><i class="fas fa-exchange-alt"></i> Блоктық (Standard)</h3>
+                    <p><strong>MPI_Send / MPI_Recv</strong> - хабарлама толық жіберілгенше/қабылданғанша күтеді.</p>
+                    <ul>
+                        <li><strong>Артықшылығы:</strong> Қарапайым, сенімді</li>
+                        <li><strong>Кемшілігі:</strong> Күту уақыты</li>
+                        <li><strong>Қолданылуы:</strong> Кіші деректер, синхронды операциялар</li>
+                    </ul>
+                </div>
+                
+                <div class="comm-card warning">
+                    <h3><i class="fas fa-buffer"></i> Буферленген (Buffered)</h3>
+                    <p><strong>MPI_Bsend</strong> - хабарлама буферге салынады, функция бірден орайды.</p>
+                    <ul>
+                        <li><strong>Артықшылығы:</strong> Күтусіз, жылдам</li>
+                        <li><strong>Кемшілігі:</strong> Буферді басқару қажет</li>
+                        <li><strong>Қолданылуы:</strong> Көп хабарлама, асинхронды операциялар</li>
+                    </ul>
+                </div>
+                
+                <div class="comm-card success">
+                    <h3><i class="fas fa-sync-alt"></i> Асинхронды (Non-blocking)</h3>
+                    <p><strong>MPI_Isend / MPI_Irecv</strong> - хабарлама жіберіледі, бірақ функция бірден орайды.</p>
+                    <ul>
+                        <li><strong>Артықшылығы:</strong> Ең жылдам, параллельдік</li>
+                        <li><strong>Кемшілігі:</strong> Күрделі, тексеру қажет</li>
+                        <li><strong>Қолданылуы:</strong> Жоғары өнімділік қажет болғанда</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Latency Comparison -->
+            <div class="latency-comparison">
+                <div class="section-title">Кідірістерді Салыстыру</div>
+                
+                <div class="benchmark-results">
+                    <div class="benchmark-bar">
+                        <div class="benchmark-label">MPI (InfiniBand):</div>
+                        <div class="benchmark-value" style="width: 7%;">0.7 μs</div>
+                    </div>
+                    
+                    <div class="benchmark-bar">
+                        <div class="benchmark-label">MPI (Ethernet 10Gb):</div>
+                        <div class="benchmark-value" style="width: 20%;">2.0 μs</div>
+                    </div>
+                    
+                    <div class="benchmark-bar">
+                        <div class="benchmark-label">OpenMP (жады бөлісу):</div>
+                        <div class="benchmark-value" style="width: 1%;">10 ns</div>
+                    </div>
+                    
+                    <div class="benchmark-bar">
+                        <div class="benchmark-label">TCP/IP (жалпы желі):</div>
+                        <div class="benchmark-value" style="width: 100%;">100 μs</div>
+                    </div>
+                    
+                    <div class="benchmark-bar">
+                        <div class="benchmark-label">Spark (Big Data):</div>
+                        <div class="benchmark-value" style="width: 1000%;">10 ms</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-container">
+                <!-- Task 3 - MPIBegin7 -->
+                <div class="task-card">
+                    <div class="task-header">
+                        <h3 class="task-title">
+                            <i class="fas fa-exchange-alt"></i> MPIBegin7
+                        </h3>
+                        <span class="task-id">4 нұсқа</span>
+                    </div>
+                    
+                    <div class="task-description">
+                        <p><strong>Тапсырма:</strong> Әрбір бас емес процесте бүтін сан берілген. MPI_Send және MPI_Recv функцияларын пайдаланып (хабар жіберу және қабылдау үшін стандартты блоктау функциялары), бұл сандарды бас процессқа жіберіп, оларды бас процесте рангтерінің өсу ретімен шығару.</p>
+                        <p><strong>Ерекшеліктер:</strong> Тек бас емес процесстер жібереді, бас процесс қабылдайды. Өсу ретімен шығару қажет.</p>
+                    </div>
+                    
+                    <div class="code-execution">
+                        <h4 class="execution-title"><i class="fas fa-play-circle"></i> Тапсырманы орындау</h4>
+                        <p>Бас емес процесстер үшін бүтін сандарды енгізіңіз:</p>
+                        
+                        <div class="input-group">
+                            <label>Процесс 1 үшін сан:</label>
+                            <input type="number" id="task3-process1" value="12">
+                        </div>
+                        <div class="input-group">
+                            <label>Процесс 2 үшін сан:</label>
+                            <input type="number" id="task3-process2" value="8">
+                        </div>
+                        <div class="input-group">
+                            <label>Процесс 3 үшін сан:</label>
+                            <input type="number" id="task3-process3" value="15">
+                        </div>
+                        
+                        <button class="run-btn" data-task="3">
+                            <i class="fas fa-play"></i> Іске қосу (4 процесс)
+                        </button>
+                        
+                        <div class="task-output" id="output3">
+                            <div class="output-title">
+                                <i class="fas fa-terminal"></i> Нәтиже:
+                            </div>
+                            <div class="output-content">Іске қосу басталды...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="explanation">
+                        <h4 class="explanation-title"><i class="fas fa-lightbulb"></i> Шешу тәсілі</h4>
+                        <p>Бұл тапсырманы орындау үшін:</p>
+                        <ol>
+                            <li>Бас емес процесстерде MPI_Send функциясы арқылы сандарды жіберу</li>
+                            <li>Бас процесте MPI_Recv функциясы арқылы сандарды қабылдау</li>
+                            <li>Қабылданған сандарды рангтердің өсу ретімен шығару (1, 2, 3)</li>
+                            <li>Әр процесс үшін хабарламаларды шығару</li>
+                            <li>MPI_Status айнымалысын қолдану</li>
+                        </ol>
+                        
+                        <div class="code-example">
+                            <div class="code-header">
+                                <span>mpi_begin7.c - ДҰРЫС ШЕШІМ</span>
+                                <button class="copy-btn" data-code="task3-code">
+                                    <i class="far fa-copy"></i> Көшіру
+                                </button>
+                            </div>
+                            <pre id="task3-code"><code>#include "mpi.h"
+#include &lt;stdio.h&gt;
+
+int main(int argc, char *argv[]) {
+    int rank, size, number;
+    MPI_Status status;
+    
+    // MPI бастау
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    
+    // Әр процесте санды анықтау
+    if (rank == 1) number = 12;
+    else if (rank == 2) number = 8;
+    else if (rank == 3) number = 15;
+    
+    if (rank == 0) {
+        // БАС ПРОЦЕСС: барлық сандарды қабылдау
+        printf("================================\n");
+        printf("Бас процесс (ранг 0) хабарлайды:\n");
+        printf("Хабарларды қабылдау режиміне кірді\n");
+        printf("================================\n");
+        
+        int received_numbers[3]; // Бізде 3 бас емес процесс бар
+        int sources[3] = {1, 2, 3};
+        
+        // Өсу ретімен қабылдау (1, 2, 3)
+        for (int i = 0; i < 3; i++) {
+            MPI_Recv(&received_numbers[i], 1, MPI_INT, 
+                    sources[i], 0, MPI_COMM_WORLD, &status);
+            
+            printf("Процесс %d-ден хабар қабылданды: %d\n", 
+                   sources[i], received_numbers[i]);
+        }
+        
+        printf("================================\n");
+        printf("Барлық процессерден алынған сандар (өсу ретімен):\n");
+        for (int i = 0; i < 3; i++) {
+            printf("Процесс %d: %d\n", sources[i], received_numbers[i]);
+        }
+        printf("================================\n");
+        
+    } else {
+        // БАС ЕМЕС ПРОЦЕСТЕР: сандарды жіберу
+        printf("================================\n");
+        printf("Процесс %d хабарлайды:\n", rank);
+        printf("Менің саным: %d\n", number);
+        printf("Бас процессқа жіберілуде...\n");
+        
+        MPI_Send(&number, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        
+        printf("Хабар сәтті жіберілді!\n");
+        printf("================================\n");
+    }
+    
+    // MPI аяқтау
+    MPI_Finalize();
+    
+    return 0;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Task 4 - MPIBegin8 -->
+                <div class="task-card">
+                    <div class="task-header">
+                        <h3 class="task-title">
+                            <i class="fas fa-buffer"></i> MPIBegin8
+                        </h3>
+                        <span class="task-id">1 нұсқа</span>
+                    </div>
+                    
+                    <div class="task-description">
+                        <p><strong>Тапсырма:</strong> Әрбір бас емес процесте нақты сан берілген. MPI_Bsend (буферизацияланған жіберу) және MPI_Recv функцияларын пайдаланып, бұл сандарды бас процессқа жіберіп, оларды бас процесте рангтерінің кему ретімен шығару. Буферді орнату үшін MPI_Buffer_attach функциясын қолдану.</p>
+                        <p><strong>Ерекшеліктер:</strong> Буферленген жіберу, кему ретімен шығару (3, 2, 1), буферді қолмен басқару.</p>
+                    </div>
+                    
+                    <div class="code-execution">
+                        <h4 class="execution-title"><i class="fas fa-play-circle"></i> Тапсырманы орындау</h4>
+                        <p>Бас емес процесстер үшін сандарды енгізіңіз:</p>
+                        
+                        <div class="input-group">
+                            <label>Процесс 1 үшін сан:</label>
+                            <input type="number" id="task4-process1" value="3.14" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Процесс 2 үшін сан:</label>
+                            <input type="number" id="task4-process2" value="2.71" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Процесс 3 үшін сан:</label>
+                            <input type="number" id="task4-process3" value="1.41" step="0.01">
+                        </div>
+                        
+                        <button class="run-btn" data-task="4">
+                            <i class="fas fa-play"></i> Іске қосу (4 процесс)
+                        </button>
+                        
+                        <div class="task-output" id="output4">
+                            <div class="output-title">
+                                <i class="fas fa-terminal"></i> Нәтиже:
+                            </div>
+                            <div class="output-content">Іске қосу басталды...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="explanation">
+                        <h4 class="explanation-title"><i class="fas fa-lightbulb"></i> Шешу тәсілі</h4>
+                        <p>Бұл тапсырманы орындау үшін:</p>
+                        <ol>
+                            <li>Буферді орнату (MPI_Buffer_attach)</li>
+                            <li>Бас емес процесстерде MPI_Bsend функциясы арқылы сандарды жіберу</li>
+                            <li>Бас процесте MPI_Recv функциясы арқылы сандарды қабылдау</li>
+                            <li>Буферді босату (MPI_Buffer_detach)</li>
+                            <li>Қабылданған сандарды рангтердің кему ретімен шығару (3, 2, 1)</li>
+                            <li>Жадыны босату</li>
+                        </ol>
+                        
+                        <div class="code-example">
+                            <div class="code-header">
+                                <span>mpi_begin8.c - ДҰРЫС ШЕШІМ</span>
+                                <button class="copy-btn" data-code="task4-code">
+                                    <i class="far fa-copy"></i> Көшіру
+                                </button>
+                            </div>
+<pre id="task4-code"><code>#include "mpi.h"
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    double number;
+    MPI_Status status;
+    
+    // MPI бастау
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    
+    // Әр процесте санды анықтау
+    if (rank == 1) number = 3.14;
+    else if (rank == 2) number = 2.71;
+    else if (rank == 3) number = 1.41;
+    
+    if (rank == 0) {
+        // БАС ПРОЦЕСС: барлық сандарды қабылдау
+        printf("================================\n");
+        printf("Бас процесс (ранг 0) хабарлайды:\n");
+        printf("Буферленген хабарларды күтуде...\n");
+        printf("================================\n");
+        
+        double received_numbers[3];
+        
+        // КЕМУ РЕТІМЕН қабылдау (3, 2, 1)
+        // Ең жоғарғы рангтен бастап
+        for (int i = 3; i >= 1; i--) {
+            MPI_Recv(&received_numbers[3-i], 1, MPI_DOUBLE, 
+                    i, 0, MPI_COMM_WORLD, &status);
+            
+            printf("Процесс %d-ден буферленген хабар қабылданды: %.2f\n", 
+                   i, received_numbers[3-i]);
+        }
+        
+        printf("================================\n");
+        printf("Барлық процессерден алынған сандар (кему ретімен):\n");
+        printf("Процесс 3: %.2f\n", received_numbers[0]);  // 1.41
+        printf("Процесс 2: %.2f\n", received_numbers[1]);  // 2.71
+        printf("Процесс 1: %.2f\n", received_numbers[2]);  // 3.14
+        printf("================================\n");
+        
+    } else {
+        // БАС ЕМЕС ПРОЦЕСТЕР: буферленген жіберу
+        
+        // Буфер үшін жады бөлу
+        int buffer_size;
+        char *buffer;
+        
+        // MPI буфер өлшемін есептеу
+        MPI_Pack_size(1, MPI_DOUBLE, MPI_COMM_WORLD, &buffer_size);
+        buffer_size += MPI_BSEND_OVERHEAD;  // Қосымша ақаулар
+        
+        // Буферді бөлу
+        buffer = (char*)malloc(buffer_size);
+        if (buffer == NULL) {
+            printf("Процесс %d: Буфер үшін жады бөлу сәтсіз!\n", rank);
+            MPI_Abort(MPI_COMM_WORLD, 1);
+        }
+        
+        // Буферді орнату
+        MPI_Buffer_attach(buffer, buffer_size);
+        
+        printf("================================\n");
+        printf("Процесс %d хабарлайды:\n", rank);
+        printf("Менің саным: %.2f\n", number);
+        printf("Буфер дайын, бас процессқа жіберілуде...\n");
+        
+        // Буферленген жіберу
+        MPI_Bsend(&number, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+        
+        printf("Буферленген хабар сәтті жіберілді!\n");
+        
+        // Буферді босату
+        MPI_Buffer_detach(buffer, &buffer_size);
+        free(buffer);
+        
+        printf("Буфер босатылды, жады босатылды\n");
+        printf("================================\n");
+    }
+    
+    // MPI аяқтау
+    MPI_Finalize();
+    
+    return 0;
+}</code></pre>
+                        </div>
+                        
+                        <h4 style="margin-top: 1.5rem;"><i class="fas fa-info-circle"></i> MPI_Bsend туралы маңызды ақпарат:</h4>
+                        <ul>
+                            <li><strong>MPI_BSEND_OVERHEAD:</strong> Буферге қосымша орын қажет</li>
+                            <li><strong>MPI_Buffer_attach:</strong> Буферді MPI жүйесіне байланыстырады</li>
+                            <li><strong>MPI_Buffer_detach:</strong> Буферді босатады, жадын босату керек</li>
+                            <li><strong>Артықшылық:</strong> Send функциясы бірден орайды, күтпейді</li>
+                            <li><strong>Кемшілік:</strong> Қосымша жады және басқару қажет</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-world Performance Data -->
+            <div class="section-title">Нақты Өнімділік Деректері</div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3><i class="fas fa-database"></i> CERN (Үлкен Адрон Коллайдері)</h3>
+                    <p>MPI арқылы күніне 1 петабайт дерек өңделеді. 100,000+ процессорда жұмыс істейді.</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-cloud-sun"></i> NOAA (Ауа райы болжамы)</h3>
+                    <p>Күнделікті 10 триллион есептеу. MPI арқылы 24 сағаттық болжам 1 сағатта дайын болады.</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 95%;"></div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-dna"></i> Human Genome Project</h3>
+                    <p>Адам геномын талдау. MPI арқылы 3 миллиард нуклеотид 1 айда өңделді.</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 90%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optimization Tips -->
+            <div class="section-title">MPI Оңтайландыру Кеңестері</div>
+            
+            <div class="communication-types">
+                <div class="comm-card">
+                    <h3><i class="fas fa-rocket"></i> Өнімділікті арттыру</h3>
+                    <ul>
+                        <li>Көп хабарламаларды біріктіру</li>
+                        <li>MPI_Isend/MPI_Irecv қолдану</li>
+                        <li>Желілік топологияны ескеру</li>
+                        <li>Буфер өлшемін дұрыс таңдау</li>
+                    </ul>
+                </div>
+                
+                <div class="comm-card warning">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Жалпы қателер</h3>
+                    <ul>
+                        <li>Буферді босатпау (жады ағынуы)</li>
+                        <li>Тегтерді дұрыс қолданбау</li>
+                        <li>MPI_Status тексермеу</li>
+                        <li>Процесс санын тексермеу</li>
+                    </ul>
+                </div>
+                
+                <div class="comm-card success">
+                    <h3><i class="fas fa-check-circle"></i> Бағдарламалау әдістері</h3>
+                    <ul>
+                        <li>MPI_COMM_WORLD қолдану</li>
+                        <li>MPI_ANY_SOURCE, MPI_ANY_TAG</li>
+                        <li>MPI_Wtime уақыт өлшеу</li>
+                        <li>MPI_Abort қателермен жұмыс</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MPI<span>LAB</span></h3>
+                    <p>Жоғары өнімді есептеулер және параллельдік бағдарламалау бойынша оқу ресурсы</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Беттер</h4>
+                    <ul>
+                        <li><a href="../index.html">Басты бет</a></li>
+                        <li><a href="../about.html">Жоба туралы</a></li>
+                        <li><a href="../basics.html">MPI негіздері</a></li>
+                        <li><a href="../cloud.html">Бұлттық технологиялар</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Модульдер</h4>
+                    <ul>
+                        <li><a href="module1.html">Модуль 1: Процессер рангтары</a></li>
+                        <li><a href="module2.html" class="active">Модуль 2: Хабар алмасу</a></li>
+                        <li><a href="module3.html">Модуль 3: Жиынтық операциялар</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Байланыс</h4>
+                    <p><i class="fas fa-user-graduate"></i> Жетекші: Букенова Индира Нурмуханбетовна</p>
+                    <p><i class="fas fa-calendar"></i> 2024 жыл</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MPI LAB - Барлық құқықтар қорғалған</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const runButtons = document.querySelectorAll('.run-btn');
+            
+            runButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task');
+                    const outputElement = document.getElementById(`output${taskId}`);
+                    const outputContent = outputElement.querySelector('.output-content');
+                    
+                    this.classList.add('running');
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Орындалуда...';
+                    outputElement.classList.add('active');
+                    outputContent.textContent = 'MPI бағдарламасы іске қосылуда...\n';
+                    
+                    setTimeout(() => {
+                        this.classList.remove('running');
+                        this.innerHTML = originalText;
+                        
+                        let result = '';
+                        switch(taskId) {
+                            case '3':
+                                // MPIBegin7: Send/Recv, increasing order
+                                const n1 = parseInt(document.getElementById('task3-process1').value) || 12;
+                                const n2 = parseInt(document.getElementById('task3-process2').value) || 8;
+                                const n3 = parseInt(document.getElementById('task3-process3').value) || 15;
+                                
+                                result = `MPI_Begin7: 4 процесс іске қосылды (стандартты блоктық)\n`;
+                                result += `================================\n`;
+                                result += `Процесс 1 хабарлайды:\nМенің саным: ${n1}\nБас процессқа жіберілуде...\n`;
+                                result += `Хабар сәтті жіберілді!\n================================\n`;
+                                result += `Процесс 2 хабарлайды:\nМенің саным: ${n2}\nБас процессқа жіберілуде...\n`;
+                                result += `Хабар сәтті жіберілді!\n================================\n`;
+                                result += `Процесс 3 хабарлайды:\nМенің саным: ${n3}\nБас процессқа жіберілуде...\n`;
+                                result += `Хабар сәтті жіберілді!\n================================\n`;
+                                result += `Бас процесс (ранг 0) хабарлайды:\n`;
+                                result += `Хабарларды қабылдау режиміне кірді\n`;
+                                result += `================================\n`;
+                                result += `Процесс 1-ден хабар қабылданды: ${n1}\n`;
+                                result += `Процесс 2-ден хабар қабылданды: ${n2}\n`;
+                                result += `Процесс 3-ден хабар қабылданды: ${n3}\n`;
+                                result += `================================\n`;
+                                result += `Барлық процессерден алынған сандар (өсу ретімен):\n`;
+                                result += `Процесс 1: ${n1}\n`;
+                                result += `Процесс 2: ${n2}\n`;
+                                result += `Процесс 3: ${n3}\n`;
+                                result += `================================\n`;
+                                break;
+                                
+                            case '4':
+                                // MPIBegin8: Bsend/Recv, decreasing order
+                                const f1 = parseFloat(document.getElementById('task4-process1').value) || 3.14;
+                                const f2 = parseFloat(document.getElementById('task4-process2').value) || 2.71;
+                                const f3 = parseFloat(document.getElementById('task4-process3').value) || 1.41;
+                                
+                                result = `MPI_Begin8: 4 процесс іске қосылды (буферленген)\n`;
+                                result += `================================\n`;
+                                result += `Процесс 1 хабарлайды:\nМенің саным: ${f1.toFixed(2)}\nБуфер дайын, бас процессқа жіберілуде...\n`;
+                                result += `Буферленген хабар сәтті жіберілді!\nБуфер босатылды, жады босатылды\n`;
+                                result += `================================\n`;
+                                result += `Процесс 2 хабарлайды:\nМенің саным: ${f2.toFixed(2)}\nБуфер дайын, бас процессқа жіберілуде...\n`;
+                                result += `Буферленген хабар сәтті жіберілді!\nБуфер босатылды, жады босатылды\n`;
+                                result += `================================\n`;
+                                result += `Процесс 3 хабарлайды:\nМенің саным: ${f3.toFixed(2)}\nБуфер дайын, бас процессқа жіберілуде...\n`;
+                                result += `Буферленген хабар сәтті жіберілді!\nБуфер босатылды, жады босатылды\n`;
+                                result += `================================\n`;
+                                result += `Бас процесс (ранг 0) хабарлайды:\n`;
+                                result += `Буферленген хабарларды күтуде...\n`;
+                                result += `================================\n`;
+                                result += `Процесс 3-тен буферленген хабар қабылданды: ${f3.toFixed(2)}\n`;
+                                result += `Процесс 2-ден буферленген хабар қабылданды: ${f2.toFixed(2)}\n`;
+                                result += `Процесс 1-ден буферленген хабар қабылданды: ${f1.toFixed(2)}\n`;
+                                result += `================================\n`;
+                                result += `Барлық процессерден алынған сандар (кему ретімен):\n`;
+                                result += `Процесс 3: ${f3.toFixed(2)}\n`;
+                                result += `Процесс 2: ${f2.toFixed(2)}\n`;
+                                result += `Процесс 1: ${f1.toFixed(2)}\n`;
+                                result += `================================\n`;
+                                break;
+                                
+                            default:
+                                result = 'Нәтиже: Бағдарлама сәтті орындалды!';
+                        }
+                        
+                        outputContent.textContent = result;
+                    }, 2500);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
